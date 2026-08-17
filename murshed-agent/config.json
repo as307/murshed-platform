@@ -1,0 +1,16 @@
+{
+  "model": "openrouter/google/gemini-2.5-flash",
+  "modelFallbacks": ["openrouter/google/gemini-2.0-flash", "openrouter/anthropic/claude-3.5-sonnet"],
+  "aiEndpoint": "http://127.0.0.1:20128/v1/chat/completions",
+  "sendDelayMs": 25000,
+  "maxSendsPerBatch": 12,
+  "followUpDays": [3, 7],
+  "quietHours": { "start": 22, "end": 9 },
+  "logFile": "outreach.log.jsonl",
+  "leadsFile": "leads.json",
+  "stateFile": "state.json",
+  "markInterestedKeywords": ["نعم", "ممتاز", "حاب", "ابي", "أبي", "ok", "okay", "sure", "yes", "تمام", "طيب", "بس", "عندي", "شلون", "كم", "اسعار", "أسعار", "بكم", "موعد", "ديمو", "demo", "call", "نتصل", "نتكلم", "نكلم", "اتصل", "سعر"],
+  "markNotInterestedKeywords": ["لا", "شكرا", "شكرًا", "مش مهتم", "ما نبي", "ما نبغى", "no", "not interested", "انصح", "ما احتاج", "ما نحتاج"],
+  "ownerNumber": "",
+  "webhookUrl": ""
+}

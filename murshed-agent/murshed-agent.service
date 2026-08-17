@@ -1,0 +1,23 @@
+[Unit]
+Description=Murshed WhatsApp marketing agent
+After=network-online.target omniroute-gateway.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=PATH=/home/yaman/.nvm/versions/node/v22.23.1/bin:/home/yaman/.local/bin:/usr/local/bin:/usr/bin:/bin
+# Stale Chromium processes survive crashes and hold the session lock, making
+# the next start fail with "browser is already running". Kill them, then clear
+# the singleton lock files, before every start.
+ExecStartPre=/bin/sh -c 'pkill -f "wwebjs_auth/[s]ession" 2>/dev/null || true; sleep 1; rm -f /home/yaman/Life/murshed-agent/.wwebjs_auth/[s]ession/Singleton* /home/yaman/Life/murshed-agent/.wwebjs_auth/[s]ession/DevToolsActivePort'
+ExecStart=/home/yaman/.nvm/versions/node/v22.23.1/bin/node /home/yaman/Life/murshed-agent/agent.js
+WorkingDirectory=/home/yaman/Life/murshed-agent
+Restart=always
+RestartSec=10
+TimeoutStopSec=30
+KillSignal=SIGTERM
+StandardOutput=append:/home/yaman/logs/murshed-agent.log
+StandardError=append:/home/yaman/logs/murshed-agent.log
+
+[Install]
+WantedBy=default.target

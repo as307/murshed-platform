@@ -1,0 +1,22 @@
+[
+  {
+    "number": "96897130999",
+    "name": "Test number 1",
+    "status": "new",
+    "createdAt": "2026-08-17T05:10:00.000Z"
+  },
+  {
+    "number": "96872542766",
+    "name": "Test number 2 (Ahmad Basha)",
+    "status": "new",
+    "createdAt": "2026-08-17T05:10:00.000Z"
+  },
+  {
+    "number": "any",
+    "status": "new",
+    "createdAt": "2026-08-17T01:41:27.297Z",
+    "followUps": 0,
+    "lastMsg": null,
+    "updatedAt": "2026-08-17T01:41:27.297Z"
+  }
+]

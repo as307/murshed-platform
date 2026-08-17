@@ -1,0 +1,16 @@
+{
+  "name": "murshed-app",
+  "version": "1.0.0",
+  "description": "Murshed — WhatsApp marketing console (desktop dashboard for the murshed-agent)",
+  "main": "main.js",
+  "scripts": {
+    "start": "node_modules/.bin/electron --no-sandbox .",
+    "launch": "bash run.sh"
+  },
+  "keywords": ["murshed", "whatsapp", "marketing", "dashboard", "electron"],
+  "author": "OmanAI",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^43.4.0"
+  }
+}

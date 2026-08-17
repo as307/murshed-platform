@@ -1,0 +1,20 @@
+[Unit]
+Description=Murshed Console — WhatsApp marketing dashboard (Electron)
+After=network-online.target murshed-agent.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=PATH=/home/yaman/.nvm/versions/node/v22.23.1/bin:/home/yaman/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=DISPLAY=:0
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+ExecStart=/home/yaman/Life/murshed-app/node_modules/.bin/electron --no-sandbox /home/yaman/Life/murshed-app
+WorkingDirectory=/home/yaman/Life/murshed-app
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=20
+StandardOutput=append:/home/yaman/logs/murshed-app.log
+StandardError=append:/home/yaman/logs/murshed-app.log
+
+[Install]
+WantedBy=default.target

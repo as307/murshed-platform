@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Murshed — WhatsApp Marketing Console</title>
+<style>
+  :root {
+    --bg:#070b12; --card:#0d1117; --card2:#141b24; --border:#1e2d3d;
+    --text:#e2e8f4; --muted:#637080; --green:#22c55e; --amber:#f59e0b;
+    --red:#ef4444; --blue:#3b82f6; --font:-apple-system,'Segoe UI',system-ui,sans-serif;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:var(--font); background:var(--bg); color:var(--text); padding:20px; }
+  .hdr { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+  .hdr h1 { font-size:19px; font-weight:800; letter-spacing:-.4px; }
+  .hdr .sub { font-size:11px; color:var(--muted); }
+  .svc { margin-left:auto; display:flex; align-items:center; gap:8px; font-size:11px; }
+  .dot { width:9px; height:9px; border-radius:50%; }
+  .dot.on { background:var(--green); box-shadow:0 0 8px var(--green); }
+  .dot.off { background:var(--red); }
+  .btn { background:var(--card2); border:1px solid var(--border); color:var(--text);
+    border-radius:6px; padding:5px 12px; font-size:11px; cursor:pointer; font-family:var(--font); }
+  .btn:hover { border-color:var(--blue); }
+  .btn.warn { border-color:var(--amber); color:var(--amber); }
+  .btn.primary { background:var(--blue); border-color:var(--blue); color:#fff; font-weight:600; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin-bottom:18px; }
+  .stat { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px 14px; }
+  .stat .v { font-size:22px; font-weight:800; letter-spacing:-.5px; }
+  .stat .k { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-top:2px; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media(max-width:900px){ .cols { grid-template-columns:1fr; } }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:14px; }
+  .card h3 { font-size:12px; font-weight:700; margin-bottom:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th { text-align:left; color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.5px; padding:4px 6px; border-bottom:1px solid var(--border); }
+  td { padding:5px 6px; border-bottom:1px solid rgba(30,45,61,.5); }
+  .tag { font-size:10px; padding:2px 8px; border-radius:10px; background:var(--card2); border:1px solid var(--border); }
+  .tag.new { color:var(--blue); border-color:var(--blue); }
+  .tag.sent { color:var(--amber); border-color:var(--amber); }
+  .tag.interested, .tag.replied { color:var(--green); border-color:var(--green); }
+  .tag.demo_booked { color:#a78bfa; border-color:#a78bfa; }
+  .tag.lost { color:var(--red); border-color:var(--red); }
+  .qr-box { text-align:center; padding:10px; }
+  .qr-box img { width:220px; height:220px; image-rendering:pixelated; border:6px solid #fff; border-radius:8px; }
+  .qr-note { font-size:11px; color:var(--muted); margin-top:8px; }
+  .qr-note b { color:var(--amber); }
+  pre.log { background:#0a0f1a; border:1px solid var(--border); border-radius:8px; padding:10px;
+    font-size:10px; line-height:1.5; max-height:220px; overflow:auto; color:#94a3b8; white-space:pre-wrap; }
+  .ev { font-size:11px; padding:4px 6px; border-bottom:1px solid rgba(30,45,61,.4); }
+  .ev b { color:var(--text); }
+  .empty { color:var(--muted); font-size:11px; padding:8px 6px; }
+  .foot { text-align:center; color:var(--muted); font-size:10px; margin-top:14px; }
+</style>
+</head>
+<body>
+  <div class="hdr">
+    <div>
+      <h1>🤖 Murshed — Marketing Console</h1>
+      <div class="sub" id="updated">—</div>
+    </div>
+    <div class="svc">
+      <span>Service</span><span class="dot" id="svcDot"></span><span id="svcText">checking…</span>
+      <button class="btn primary" id="restartBtn">Restart</button>
+    </div>
+  </div>
+
+  <div class="grid" id="stats"></div>
+
+  <div class="cols">
+    <div>
+      <div class="card">
+        <h3>Leads Pipeline</h3>
+        <table><thead><tr><th>Number</th><th>Name</th><th>Status</th></tr></thead>
+        <tbody id="leadsBody"></tbody></table>
+        <button class="btn" id="openLeads" style="margin-top:10px">Open leads.json folder</button>
+      </div>
+      <div class="card">
+        <h3>Demo Bookings (hot leads)</h3>
+        <div id="bookings"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>WhatsApp Link</h3>
+        <div class="qr-box" id="qrBox"><div class="qr-note">Waiting for QR…</div></div>
+        <button class="btn" id="openAgent" style="margin-top:8px;width:100%">Open agent folder</button>
+      </div>
+      <div class="card">
+        <h3>Service Log (last 60 lines)</h3>
+        <pre class="log" id="svcLog">loading…</pre>
+        <button class="btn warn" id="logBtn" style="margin-top:8px;width:100%">View outreach.log.jsonl</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">Murshed Console · data from ~/Life/murshed-agent · auto-refresh 10s</div>
+
+<script src="renderer.js"></script>
+</body>
+</html>

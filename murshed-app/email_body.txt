@@ -1,0 +1,42 @@
+Subject: Murshed — build complete: WhatsApp marketing agent + console deployed
+
+Hi,
+
+The Murshed WhatsApp marketing system is built, reviewed, improved, tested, and deployed. Summary below.
+
+1) WHAT WAS BUILT
+
+Agent (whatsapp-web.js + AI replies via OmniRoute gateway):
+- Outreach engine: sends the Arabic pitch to leads automatically, rate-limited (25s gap, quiet hours 22:00–09:00)
+- AI auto-replies in Omani Arabic to any lead that responds (persona: ai_persona.txt)
+- Lead lifecycle CRM (leads.json): new → sent → replied → interested → demo_booked → won/lost
+- Follow-up scheduler: day-3 and day-7 nudges to silent leads
+- Intent detection: booking words mark demo_booked + ping the owner; negatives stop follow-ups
+- Model fallbacks: gemini-2.5-flash via OmniRoute → 2 backup models
+- Full audit log: outreach.log.jsonl (every send/reply/booking)
+
+Console (Electron desktop app, ~/Life/murshed-app):
+- Live dashboard: lead pipeline counts, sent/replied/booked stats, QR code display
+- Service controls: restart the agent, view the last 60 log lines
+- Reads directly from the agent's leads.json + outreach.log.jsonl
+
+2) KEY FIXES THIS DEPLOY
+- Agent crash-loop fixed: stale Chromium processes held the session lock ("browser is already running"). The systemd unit now kills stale browsers + clears lock files before every start (ExecStartPre). Verified stable: active, QR firing, zero restarts.
+- Model bug: replies previously called openai/gpt-4o-mini which OmniRoute has no credentials for; now gemini-2.5-flash with fallbacks.
+
+3) TESTS
+20/20 passing (Node built-in test runner, zero new deps): dedup, quiet hours, follow-up scheduling, intent detection, status pipeline, rate limits. npm run test / test:watch.
+
+4) DEPLOYMENT (systemd user services, auto-restart, enabled at boot)
+- murshed-agent.service  → active (running) — QR waiting to be scanned
+- murshed-app.service    → active (running) — Electron console on DISPLAY
+
+5) STATUS / NEXT ACTION
+- WhatsApp not linked yet: scan the QR (bash ~/Life/murshed-agent/show-qr.sh opens it).
+- Seeded leads (status new, pitch queued): +968 9713 0999, +968 7254 2766 (test), +968 7222 9999 (MK Muscat).
+- Demo-booking alerts go to ownerNumber in ~/Life/murshed-agent/config.json (set it to your number).
+- After link: pitch auto-sends, AI replies, follow-ups fire, bookings ping the owner.
+
+Logs: ~/logs/murshed-agent.log and ~/logs/murshed-app.log
+
+— OmanAI / Murshed

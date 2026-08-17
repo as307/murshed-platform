@@ -1,0 +1,26 @@
+{
+  "name": "murshed-agent",
+  "version": "2.0.0",
+  "description": "Murshed — WhatsApp marketing agent (multi-lead outreach, follow-ups, AI replies, lead pipeline)",
+  "main": "agent.js",
+  "scripts": {
+    "start": "node agent.js",
+    "test": "node --test",
+    "test:watch": "node --test --watch",
+    "deploy": "bash deploy.sh"
+  },
+  "keywords": [
+    "whatsapp",
+    "marketing",
+    "ai",
+    "leads",
+    "oman"
+  ],
+  "author": "OmanAI",
+  "license": "ISC",
+  "dependencies": {
+    "qrcode": "^1.5.4",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.34.7"
+  }
+}

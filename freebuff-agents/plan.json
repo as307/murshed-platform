@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "mission": "Generate money ASAP: land first Murshed client (OMR 50/mo), launch Gumroad + Fiverr passive income, onboard with oman-lead-bot. Agent runs every task it can; human only signs in, bills, and approves.",
+  "tracks": [
+    {
+      "id": "0",
+      "name": "Track 0 — System Health (know what you have)",
+      "steps": [
+        { "id": "s1", "type": "auto", "task": "leadbot_status", "title": "Verify oman-lead-bot deployment health (env vars, site, webhook)", "out": "assets/system/leadbot-status.md" },
+        { "id": "s2", "type": "auto", "task": "blueprint_assets", "title": "Extract Murshed system prompt, objection scripts, contract from the blueprint", "out": "assets/murshed/" }
+      ]
+    },
+    {
+      "id": "A",
+      "name": "Track A — Direct Sales (Murshed → Real Estate)  [OMR 50/mo first client]",
+      "steps": [
+        { "id": "a1", "type": "auto", "task": "llm_leads", "title": "Research fresh leads via OpenRouter (real estate + hospitality + retail in Oman)", "out": "assets/leads/llm-leads.md" },
+        { "id": "a2", "type": "gate", "title": "Send outreach (test number first: +968 7254 2766)", "who": "human", "kind": "approve+send", "instructions": "Run: python3 ~/Life/murshed_bot.py — opens WhatsApp Web pre-filled. Click Send, press Enter. Test number first, then verified leads.", "done_when": "Test message sent" },
+        { "id": "a3", "type": "gate", "title": "Reply to responses with demo script (2-min rule)", "who": "human", "kind": "reply", "instructions": "Copy Demo Reply from ~/Life/agents/assets/outreach/pack.md within 2 minutes of each reply.", "done_when": "Replies handled" },
+        { "id": "a4", "type": "gate", "title": "Book + run demo calls (15 min, close OMR 50/mo)", "who": "human", "kind": "call", "instructions": "Call script in ~/Life/agents/assets/outreach/pack.md. Close: '50 ريال شهريًا — أقل من موظف استقبال ليوم واحد'", "done_when": "≥1 demo call booked" },
+        { "id": "a5", "type": "gate", "title": "Collect payment (thawani / bank transfer)", "who": "human", "kind": "billing", "instructions": "Send thawani link or bank details. Send payment-confirmation message from the pack.", "done_when": "First payment received" },
+        { "id": "a6", "type": "auto", "task": "onboard_brief", "title": "Generate client onboarding brief for the paying client", "out": "assets/outreach/client-brief.md" }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Track B — Gumroad (Arabic AI Prompt Kit, $19)  [passive international]",
+      "steps": [
+        { "id": "b1", "type": "auto", "task": "gumroad_product", "title": "Generate/refresh the Arabic AI Prompt Kit (50 prompts, PDF)", "out": "assets/gumroad/" },
+        { "id": "b2", "type": "gate", "title": "Create Gumroad account", "who": "human", "kind": "signup", "instructions": "Open https://gumroad.com/signup — free. Connect Payoneer/bank.", "done_when": "Account + payout connected" },
+        { "id": "b3", "type": "gate", "title": "Upload the product ($19)", "who": "human", "kind": "publish", "instructions": "Gumroad → New Product. Name: 'Arabic AI Business Prompt Kit'. Upload assets/gumroad/arabic-ai-prompt-kit.pdf. Paste product-copy.md. Price $19.", "done_when": "Product live at $19" },
+        { "id": "b4", "type": "auto", "task": "promo_posts", "title": "Generate promo posts (LinkedIn + WhatsApp groups)", "out": "assets/posts/" }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Track C — Fiverr (Arabic AI Chatbot Gig, $50-200)  [GCC services demand]",
+      "steps": [
+        { "id": "c1", "type": "auto", "task": "fiverr_gig", "title": "Generate/refresh Fiverr gig package + cover image", "out": "assets/fiverr/" },
+        { "id": "c2", "type": "gate", "title": "Create Fiverr account", "who": "human", "kind": "signup", "instructions": "Open https://fiverr.com/join — real name, bio from assets/fiverr/gig-package.md", "done_when": "Account created" },
+        { "id": "c3", "type": "gate", "title": "Publish the gig ($50/$100/$200)", "who": "human", "kind": "publish", "instructions": "Paste title/desc/tags from assets/fiverr/gig-package.md. Upload gig-cover.png.", "done_when": "Gig is live" }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Track D — The Product Engine (oman-lead-bot → clients)",
+      "steps": [
+        { "id": "d1", "type": "gate", "title": "Paste WHATSAPP_TOKEN + WHATSAPP_PHONE_NUMBER_ID into oman-lead-bot Settings → Keys", "who": "human", "kind": "setup", "instructions": "Meta dashboard → System users → generate permanent token; copy Phone number ID from API Setup. Also set WHATSAPP_VERIFY_TOKEN and point webhook at <site-url>/whatsapp-webhook.", "done_when": "Keys set + webhook configured" },
+        { "id": "d2", "type": "auto", "task": "product_demo", "title": "Generate the Murshed product demo script (for client calls)", "out": "assets/murshed/demo.md" }
+      ]
+    },
+    {
+      "id": "Z",
+      "name": "Track Z — The Money Dashboard",
+      "steps": [
+        { "id": "z1", "type": "auto", "task": "dashboard", "title": "Generate the money-machine dashboard", "out": "assets/dashboard.html" }
+      ]
+    }
+  ],
+  "gates_summary": "Agent runs all auto tasks. Human gates: send outreach, signup Gumroad/Fiverr, upload products, paste Meta keys, collect payment."
+}

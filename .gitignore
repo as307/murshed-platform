@@ -1,0 +1,8 @@
+node_modules/
+.wwebjs_auth/
+*.log
+qr.png
+email_ready.eml
+__pycache__/
+*.pyc
+.DS_Store
