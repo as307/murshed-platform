@@ -65,6 +65,20 @@ function nextStatus(current, intent) {
   return row[intent] || row.default || current;
 }
 
+/**
+ * QR watchdog: is the session stuck (no QR for too long while unauthenticated)?
+ * Returns true when the browser should be restarted.
+ *  - lastQrAt: epoch ms of the most recent 'qr' event
+ *  - now:      epoch ms to evaluate at
+ *  - graceMs:  how long without a QR before declaring the browser stuck
+ * Stops watching once authenticated (ready) — QRs stop after linking, by design.
+ */
+function qrStuck(lastQrAt, now, graceMs, authenticated = false) {
+  if (authenticated) return false;
+  if (!lastQrAt) return false; // never got a QR yet — give it time
+  return (now - lastQrAt) > graceMs;
+}
+
 /** Should we attempt sends right now? */
 function canSend(quiet, now = new Date()) {
   return !isQuietHours(quiet, now);
@@ -82,6 +96,7 @@ module.exports = {
   dueFollowUp,
   detectIntent,
   nextStatus,
+  qrStuck,
   canSend,
   batchCap,
 };

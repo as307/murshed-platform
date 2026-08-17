@@ -39,6 +39,13 @@ const FOLLOW_UP_DAYS = CONFIG.followUpDays || [3, 7];
 const QUIET = CONFIG.quietHours || { start: 23, end: 4 };
 const OWNER = CONFIG.ownerNumber || '';
 const WEBHOOK_URL = CONFIG.webhookUrl || '';
+// QR watchdog: if the browser stops producing QRs while unauthenticated,
+// the session is stuck (memory pressure / CDP drop). Restart the process and
+// let systemd + ExecStartPre bring it back cleanly.
+const QR_GRACE_MS = CONFIG.qrGraceMs ?? 120000;   // no QR for this long = stuck
+const QR_CHECK_MS = CONFIG.qrCheckMs ?? 30000;    // check interval
+let lastQrAt = null;
+let authenticated = false;
 
 const LEADS_FILE = path.join(DIR, CONFIG.leadsFile || 'leads.json');
 const STATE_FILE = path.join(DIR, CONFIG.stateFile || 'state.json');
@@ -139,6 +146,7 @@ const client = new Client({
 });
 
 client.on('qr', (qr) => {
+  lastQrAt = Date.now();
   console.log('\n⚠️  Scan this QR with WhatsApp → Linked Devices:\n');
   qrcode.generate(qr, { small: true });
   // Also write a scannable PNG so the QR is visible without the terminal
@@ -146,7 +154,19 @@ client.on('qr', (qr) => {
   logEvent({ type: 'qr' });
 });
 
+// --- QR watchdog: self-heal if the browser stalls ---
+setInterval(() => {
+  if (core.qrStuck(lastQrAt, Date.now(), QR_GRACE_MS, authenticated)) {
+    logEvent({ type: 'watchdog_restart', reason: `no QR for ${QR_GRACE_MS}ms while unauthenticated` });
+    console.error('⚠️ Watchdog: QR stale — restarting browser process');
+    // Exit hard; systemd Restart=always + ExecStartPre (stale-browser kill)
+    // bring the agent back with a fresh browser.
+    process.exit(1);
+  }
+}, QR_CHECK_MS);
+
 client.on('ready', async () => {
+  authenticated = true;
   console.log(`\n✅ Murshed is LIVE. Targets in leads.json + argv: ${[...new Set([...loadLeads().map(l=>l.number), ...argvTargets])].join(', ')}`);
   logEvent({ type: 'ready' });
   

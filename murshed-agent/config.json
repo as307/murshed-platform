@@ -5,6 +5,8 @@
   "sendDelayMs": 25000,
   "maxSendsPerBatch": 12,
   "followUpDays": [3, 7],
+  "qrGraceMs": 120000,
+  "qrCheckMs": 30000,
   "quietHours": { "start": 22, "end": 9 },
   "logFile": "outreach.log.jsonl",
   "leadsFile": "leads.json",
